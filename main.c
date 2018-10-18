@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/17 11:50:27 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/18 11:42:39 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,18 +19,47 @@ void 	print_shape(t_board *board)
 	int i;
 	int j;
 
-	while (board)
+	while (board != NULL)
 	{
-		i = -1;
-		while (i < 3)
+		i = 0;
+		while (i < 4)
 		{
 			j = 0;
 			while (j < 4)
-				printf("%d - ", board->shape[++i][j++]);
+				printf("%d\t", board->shape[i][j++]);
 			printf("\n");
+			i++;
 		}
+		printf("\n");
 		board = board->next;
 	}	
+}
+
+int		is_valid(int shape[4][4])
+{
+	int i;
+	int j;
+	int point;
+
+	i = 0;
+	point = 0;
+	while (i < 4)
+	{
+		j = 0;
+		while (j < 4)
+		{
+			if (i < 3 && (shape[i][j] & 1) & (shape[i + 1][j] & 1))
+				point++;
+			if (j < 3 && (shape[i][j] & 1) & (shape[i][j + 1] & 1))
+				point++;
+			j++;
+			printf(" %d - point -> %d\n", i, point);
+		}
+		i++;
+	}
+	if (point >= 3)
+		return (1);
+	return (0);
 }
 
 int		open_file(char *file)
@@ -54,11 +83,14 @@ int		validate_shape(int fd)
 	if ((board = lst_addnew()) == NULL)
 		return (0);
 	head = board;
-	printf("something\n");
 	while (get_next_line(fd, &line) == 1)
 	{
 		if (i == HEIGHT && (i = 0) == 0)
 		{
+			if (is_valid(board->shape))
+				printf("valid\n");
+			else
+				printf("invalid\n");
 			if ((board->next = lst_addnew()) == NULL)
 				return (0);
 			board = board->next;
@@ -72,6 +104,8 @@ int		validate_shape(int fd)
 		}
 		i++;
 	}
+	if (is_valid(board->shape))
+		printf("valid\n");
 	board->next = NULL;
 	print_shape(head);
 	return (1);
@@ -81,17 +115,22 @@ int		validate_file(int fd, char *argv)
 {
 	char *line;
 	int	nheight;
+	int nshape;
 
 	nheight = 0;
+	nshape = 0;
 	if(fd <= 2)
 		return (-1);
 	while (get_next_line(fd, &line) == 1)
 	{
 		if (++nheight == HEIGHT + 1)
 		{
+			if (nshape != 4)
+				return (-1);
 			if (ft_strcmp(line, "") != 0)
 				return (-1);
 			nheight = 0;
+			nshape = 0;
 			continue ;
 		}
 		if (ft_strlen(line) != WIDTH)
@@ -100,6 +139,8 @@ int		validate_file(int fd, char *argv)
 		{
 			if (*line != BLOCK && *line != EMPTY)
 				return (-1);
+			if (*line == BLOCK)
+				nshape++;
 			line++;
 		}
 	}
