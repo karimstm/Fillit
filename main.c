@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/18 11:42:39 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/19 16:28:54 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ void 	print_shape(t_board *board)
 		{
 			j = 0;
 			while (j < 4)
-				printf("%d\t", board->shape[i][j++]);
+				printf("%c\t", (board->shape[i][j++] == 1) ? board->c : '.' );
 			printf("\n");
 			i++;
 		}
@@ -53,7 +53,6 @@ int		is_valid(int shape[4][4])
 			if (j < 3 && (shape[i][j] & 1) & (shape[i][j + 1] & 1))
 				point++;
 			j++;
-			printf(" %d - point -> %d\n", i, point);
 		}
 		i++;
 	}
@@ -71,26 +70,29 @@ int		open_file(char *file)
 	return (fd);
 }
 
-int		validate_shape(int fd)
+int		validate_shape(int fd, t_board **start)
 {
 	char		*line;
 	t_board		*board;
 	t_board		*head;
 	int 		i;
 	int			j;
+	char 		c;
 
 	i = 0;
+	c = 'A';
 	if ((board = lst_addnew()) == NULL)
 		return (0);
 	head = board;
+	*start = board;
 	while (get_next_line(fd, &line) == 1)
 	{
 		if (i == HEIGHT && (i = 0) == 0)
 		{
-			if (is_valid(board->shape))
-				printf("valid\n");
-			else
-				printf("invalid\n");
+			board->c = c++;
+			if (!is_valid(board->shape))
+				return(-1);
+			reform_shape_center(board->shape);
 			if ((board->next = lst_addnew()) == NULL)
 				return (0);
 			board = board->next;
@@ -104,14 +106,15 @@ int		validate_shape(int fd)
 		}
 		i++;
 	}
-	if (is_valid(board->shape))
-		printf("valid\n");
+	board->c = c;
+	if (!is_valid(board->shape))
+		return (-1);
+	reform_shape_center(board->shape);
 	board->next = NULL;
-	print_shape(head);
 	return (1);
 }
 
-int		validate_file(int fd, char *argv)
+int		validate_file(int fd, char *argv, t_board **board)
 {
 	char *line;
 	int	nheight;
@@ -144,15 +147,21 @@ int		validate_file(int fd, char *argv)
 			line++;
 		}
 	}
-	if (!validate_shape(open_file(argv)))
+	if (!validate_shape(open_file(argv), board))
 		return (-1);
 	return (1);
 }
 
+
 int		main(int argc, char **argv)
 {
+	t_board *head;
+
 	if (argc != 2)
 		ft_putstr_fd("Usage: ./fillit	source_file", STDERR_FILENO);
-	if(validate_file(open_file(argv[1]), argv[1]) == -1)
+	if(validate_file(open_file(argv[1]), argv[1], &head) == -1)
 		ft_putstr_fd("error\n", STDERR_FILENO);
+	printf("==========================\n");
+	print_shape(head);
+	return (0);
 }
