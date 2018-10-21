@@ -11,6 +11,7 @@
 /* ************************************************************************** */
 
 #include <stdio.h>
+#include "includes/fillit.h"
 
 int		reform_shape_center(int block[4][4])
 {
@@ -59,3 +60,56 @@ int		reform_shape_center(int block[4][4])
 	printf("min_j -> %d\n", min_j);	
 	return(0);
 }
+
+int     get_points(t_board **board)
+{
+   t_board *tmp;
+   int      i;
+   int      j;
+   int      flag;
+   int      first;
+   int      counter;
+
+   first = 0;
+   counter = 0;
+   flag = 0;
+   tmp = *board;
+   i = 0;
+   while(tmp)
+   {
+       while (i < HEIGHT)
+       {
+           j = 0; 
+           while (j < WIDTH)
+            {
+                if (tmp->shape[i][j] == 1 && flag == 0)
+                {
+                    flag = 1;
+                    first = j;
+                }
+                if (tmp->shape[i][j] == 1)
+                {
+                    tmp->corrd[counter].x = j - first; 
+                    tmp->corrd[counter].y = i;
+                    printf("%d - %d\n", tmp->corrd[counter].x, tmp->corrd[counter].y);
+                    counter++;
+                }
+                j++;
+            }
+            i++;
+       }
+       counter = 0;
+       printf("=======\n");
+       i = 0;
+       tmp = tmp->next;
+   }
+   return (1);
+}
+
+
+
+
+
+
+
+

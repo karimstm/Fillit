@@ -70,7 +70,7 @@ int		open_file(char *file)
 	return (fd);
 }
 
-int		validate_shape(int fd, t_board **start)
+int		validate_shape(int fd, t_board **start, int *counter)
 {
 	char		*line;
 	t_board		*board;
@@ -87,8 +87,8 @@ int		validate_shape(int fd, t_board **start)
 	*start = board;
 	while (get_next_line(fd, &line) == 1)
 	{
-		if (i == HEIGHT && (i = 0) == 0)
-		{
+		if (i == HEIGHT && !(i = 0))
+		{   
 			board->c = c++;
 			if (!is_valid(board->shape))
 				return(-1);
@@ -96,7 +96,8 @@ int		validate_shape(int fd, t_board **start)
 			if ((board->next = lst_addnew()) == NULL)
 				return (0);
 			board = board->next;
-			continue;
+            (*counter)++;
+            continue;
 		}
 		j = 0;
 		while (*line)
@@ -110,11 +111,12 @@ int		validate_shape(int fd, t_board **start)
 	if (!is_valid(board->shape))
 		return (-1);
 	reform_shape_center(board->shape);
-	board->next = NULL;
+    board->next = NULL;
+    printf("%d\n", ++(*counter));
 	return (1);
 }
 
-int		validate_file(int fd, char *argv, t_board **board)
+int		validate_file(int fd, char *argv, t_board **board, int *counter)
 {
 	char *line;
 	int	nheight;
@@ -147,7 +149,7 @@ int		validate_file(int fd, char *argv, t_board **board)
 			line++;
 		}
 	}
-	if (!validate_shape(open_file(argv), board))
+	if (!validate_shape(open_file(argv), board, counter))
 		return (-1);
 	return (1);
 }
@@ -156,12 +158,15 @@ int		validate_file(int fd, char *argv, t_board **board)
 int		main(int argc, char **argv)
 {
 	t_board *head;
-
+    int     **board;
+    int     counter = 0;
 	if (argc != 2)
 		ft_putstr_fd("Usage: ./fillit	source_file", STDERR_FILENO);
-	if(validate_file(open_file(argv[1]), argv[1], &head) == -1)
+	if(validate_file(open_file(argv[1]), argv[1], &head, &counter) == -1)
 		ft_putstr_fd("error\n", STDERR_FILENO);
-	printf("==========================\n");
-	print_shape(head);
-	return (0);
+	printf("======================\n");
+	get_points(&head);
+    print_shape(head);
+    board = (int **)malloc(sizeof(int *) * counter);
+    return (0);
 }

@@ -20,13 +20,21 @@
 # include "libft.h"
 # include "../get_next_line/get_next_line.h"
 
+typedef struct      s_point
+{
+    int x;
+    int y;
+}                   t_point;
+
 typedef struct 		s_board
 {
 	int				shape[4][4];
 	char			c;
+    t_point         corrd[4];
 	struct s_board	*next;
 }					t_board;
 
 t_board				*lst_addnew();
 int					reform_shape_center(int block[4][4]);
+int                 get_points(t_board **board);
 #endif
