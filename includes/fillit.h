@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:41:31 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/22 11:20:53 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/22 11:28:01 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,6 +40,6 @@ int                 get_points(t_board **board);
 int 				solver(t_board **board, char **table, int *counter);
 void				place_teris(char **table, int i, int j, t_point corr[4], char c);
 int					is_safe(char **table, int i, int j, t_point corr[4]);
-char					**initial_table(int *counter);
+char					**initial_table(int size);
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 08:58:46 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/22 11:21:29 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/22 11:48:12 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,19 +14,19 @@
 #include "includes/fillit.h"
 #include <stdio.h>
 
-char     **initial_table(int *counter)
+char     **initial_table(int size)
 {
-     char **table = (char **)malloc(sizeof(char *) * 4);
+     char **table = (char **)malloc(sizeof(char *) * size);
      int i;
      int j;
 
      i = -1;
-     while (++i < (*counter))
+     while (++i < size)
      {
-		table[i] = (char *)malloc(sizeof(char) * 4);
+		table[i] = (char *)malloc(sizeof(char) * size);
         j = 0;
-        while (j < (*counter))
-            table[i][j++] = 0;
+        while (j < size)
+            table[i][j++] = '.';
      }
      return (table);
 }
@@ -40,9 +40,11 @@ int		is_safe(char **table, int i, int j, t_point corr[4])
 			return (0);
 		pos++;
 	}
-	if ((table[i + corr[0].y][j + corr[1].x] || table[i + corr[1].y][j + corr[1].x]))
+	if ((table[i + corr[0].y][j + corr[1].x] != '.' ||
+			   	table[i + corr[1].y][j + corr[1].x] != '.'))
 		return (0);
-	if ((table[i + corr[2].y][j + corr[2].x] || table[i + corr[3].y][j + corr[3].x]))
+	if ((table[i + corr[2].y][j + corr[2].x] != '.' ||
+			   	table[i + corr[3].y][j + corr[3].x] != '.'))
 		return (0);
 	return (1);
 }
@@ -84,22 +86,20 @@ int     solver(t_board **board, char **table, int *counter)
 	t_board *tmp;
 
 	*counter = (int)sqrt((*counter) * 4);
-    table = initial_table(counter);
+    table = initial_table(*counter);
 	tmp = *board;
 	i = 0;
-	print_solution(table);
 	while (i < 4)
 	{
 		j = 0;
 		while (j < 4)
 		{
-			if (table[i][j] == 0)
+			if (table[i][j] == '.')
 				if(is_safe(table, i, j, tmp->corrd))
 				{
 					place_teris(table, i, j, tmp->corrd, tmp->c);
 					if (tmp->next)
 						tmp = tmp->next;
-					printf("I was here\n");
 				}
 			j++;
 		}

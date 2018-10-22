@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/19 11:56:14 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/22 09:08:50 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/22 11:32:56 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,8 +56,6 @@ int		reform_shape_center(int block[4][4])
 		}
 		i++;
 	}
-	printf("min_i -> %d\n", min_i);	
-	printf("min_j -> %d\n", min_j);	
 	return(0);
 }
 
@@ -91,7 +89,6 @@ int     get_points(t_board **board)
                 {
                     tmp->corrd[counter].x = j - first; 
                     tmp->corrd[counter].y = i;
-                    printf("%d - %d\n", tmp->corrd[counter].x, tmp->corrd[counter].y);
                     counter++;
                 }
                 j++;
@@ -99,7 +96,6 @@ int     get_points(t_board **board)
             i++;
        }
        counter = 0;
-       printf("=======\n");
        i = 0;
        tmp = tmp->next;
    }
