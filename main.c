@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/20 11:20:52 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/22 11:20:45 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,7 +158,7 @@ int		validate_file(int fd, char *argv, t_board **board, int *counter)
 int		main(int argc, char **argv)
 {
 	t_board *head;
-    int     **board;
+    char     **board;
     int     counter = 0;
 	if (argc != 2)
 		ft_putstr_fd("Usage: ./fillit	source_file", STDERR_FILENO);
@@ -166,7 +166,11 @@ int		main(int argc, char **argv)
 		ft_putstr_fd("error\n", STDERR_FILENO);
 	printf("======================\n");
 	get_points(&head);
+	printf("Hello from the main\n");
     print_shape(head);
-    board = (int **)malloc(sizeof(int *) * counter);
+    board = (char **)malloc(sizeof(char *) * counter);
+	if (board == NULL)
+		printf("I'm null");
+	solver(&head, board, &counter);
     return (0);
 }
