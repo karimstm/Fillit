@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 08:58:46 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/22 18:39:14 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 09:53:59 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,10 +100,10 @@ int		solve_teris(t_board **board, char **table, int size, int *i, int *j)
 	int y;
 
 	tmp = *board;
-	x = 0;
+	x = *i;
+	y = *j;
 	while (x < size)
 	{
-		y = 0;
 		while (y < size)
 		{
 			if (table[x][y] == '.')
@@ -116,6 +116,7 @@ int		solve_teris(t_board **board, char **table, int size, int *i, int *j)
 				}
 			y++;
 		}
+		y = 0;
 		x++;
 	}
 	return (0);
@@ -133,32 +134,17 @@ int     solver(t_board **board, char **table, int *counter, int x, int y)
 
 	i = x;
 	j = y;
-	//if (j == (*counter))
-	//	j = 0;
-	if (tmp == NULL)
+	if (i == (*counter) - 1 && i == (*counter) - 1)
 		return (0);
-	if (solve_teris(&tmp, table, (*counter), &i, &j))
-	{
-		if (tmp->next)
-		{
-
-			tmp->next->prev = lst_addnew();
-			tmp->next->prev = tmp;
-		}
-		if (solver(&tmp->next, table, counter, i, j) == 0)
-			solver(&tmp, table, counter, i, j + 1);
-	}
+	if (tmp == NULL)
+		return (1);
+	solve_teris(&tmp, table, *counter, &i, &j);
+	if (solver(&tmp->next, table, counter, 0, 0))
+		return (1);
 	else
 	{
-	//if (++j == (*counter))
-	//	j = 0;
-		
-		remove_teris(table, i, j, tmp->prev->corrd);
-		return (0);
-		//	if (solve_teris(&tmp, table, (*counter), &i, &j))
-		//		solver(&tmp->next, table, counter, i, j + 1);
-	//	solver(&tmp->next, table, counter, i, j);
+		remove_teris(table, i, j, tmp->corrd);
+		solver(&tmp, table, counter, i, j);
 	}
-
 	return (1);
 }
