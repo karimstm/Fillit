@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:41:31 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/22 11:28:01 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/22 18:06:34 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,14 +32,16 @@ typedef struct 		s_board
 	char			c;
     t_point         corrd[4];
 	struct s_board	*next;
+	struct s_board	*prev;
 }					t_board;
 
 t_board				*lst_addnew();
 int					reform_shape_center(int block[4][4]);
 int                 get_points(t_board **board);
-int 				solver(t_board **board, char **table, int *counter);
+int 				solver(t_board **board, char **table, int *counter, int i, int j);
 void				place_teris(char **table, int i, int j, t_point corr[4], char c);
-int					is_safe(char **table, int i, int j, t_point corr[4]);
+int					is_safe(char **table, int i, int j, t_point corr[4], int size);
 char					**initial_table(int size);
+void				print_solution(char **table, int size);
 
 #endif

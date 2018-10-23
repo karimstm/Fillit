@@ -6,13 +6,14 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/22 12:53:05 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/22 18:39:20 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
 #include "includes/fillit.h"
 #include <stdio.h>
+#include <math.h>
 
 void 	print_shape(t_board *board)
 {
@@ -158,7 +159,7 @@ int		validate_file(int fd, char *argv, t_board **board, int *counter)
 int		main(int argc, char **argv)
 {
 	t_board *head;
-    char     **board;
+    char     **table;
     int     counter = 0;
 	if (argc != 2)
 		ft_putstr_fd("Usage: ./fillit	source_file", STDERR_FILENO);
@@ -168,9 +169,16 @@ int		main(int argc, char **argv)
 		exit(0);
 	}
 	get_points(&head);
-    board = (char **)malloc(sizeof(char *) * counter);
-	if (board == NULL)
+    table = (char **)malloc(sizeof(char *) * counter);
+	if (table == NULL)
 		exit(0);
-	solver(&head, board, &counter);
+	counter = (int)sqrt(counter * 4);
+	table = initial_table(counter);
+	while (solver(&head, table, &counter,0, 0) == 0)
+	{
+		counter++;
+		table = initial_table(counter);
+	}
+	print_solution(table, counter);
     return (0);
 }
