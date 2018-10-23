@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 08:58:46 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 11:24:09 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 14:50:14 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,15 +36,15 @@ int		is_safe(char **table, int i, int j, t_point corr[4], int size)
 	int pos = 0;
 	while (pos < 4)
 	{
-		if (i + corr[pos].y >= size || j + corr[pos].x >= size)
+		if (i + corr[pos].y >= size | j + corr[pos].x >= size)
 			return (0);
 		pos++;
 	}
-	if ((table[i + corr[0].y][j + corr[0].x] != '.' ||
-				table[i + corr[1].y][j + corr[1].x] != '.'))
+	if (((table[i + corr[0].y][j + corr[0].x] ^ '.') |
+				(table[i + corr[1].y][j + corr[1].x] ^ '.')))
 		return (0);
-	if ((table[i + corr[2].y][j + corr[2].x] != '.' ||
-				table[i + corr[3].y][j + corr[3].x] != '.'))
+	if (((table[i + corr[2].y][j + corr[2].x] ^ '.') |
+				(table[i + corr[3].y][j + corr[3].x] ^ '.')))
 		return (0);
 	return (1);
 }
@@ -105,7 +105,7 @@ int		solve_teris(t_board **board, char **table, int size, int *i, int *j)
 	{
 		while (y < size)
 		{
-			if (table[x][y] == '.')
+			if (!(table[x][y] ^ '.'))
 				if(is_safe(table, x, y, tmp->corrd, size))
 				{
 					place_teris(table, x, y, tmp->corrd, tmp->c);
