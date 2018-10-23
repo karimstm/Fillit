@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 08:58:46 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 14:50:14 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 16:44:50 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -125,9 +125,6 @@ int     solver(t_board **board, char **table, int *counter, int x, int y)
 {
 	t_board *tmp;
 	tmp = *board;
-
-
-
 	int i;
 	int j;
 
@@ -138,7 +135,9 @@ int     solver(t_board **board, char **table, int *counter, int x, int y)
 	if (tmp == NULL)
 		return (1);
 	if(solve_teris(&tmp, table, *counter, &i, &j) == 0)
+	{
 		return (0);
+	}
 	if (solver(&tmp->next, table, counter, 0, 0) == 0)
 	{
 		remove_teris(table, i, j, tmp->corrd);

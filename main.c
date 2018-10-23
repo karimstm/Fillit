@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 11:24:23 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 16:48:31 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,7 +75,6 @@ int		validate_shape(int fd, t_board **start, int *counter)
 {
 	char		*line;
 	t_board		*board;
-	t_board		*head;
 	int 		i;
 	int			j;
 	char 		c;
@@ -84,7 +83,6 @@ int		validate_shape(int fd, t_board **start, int *counter)
 	c = 'A';
 	if ((board = lst_addnew()) == NULL)
 		return (0);
-	head = board;
 	*start = board;
 	while (get_next_line(fd, &line) == 1)
 	{
@@ -97,8 +95,8 @@ int		validate_shape(int fd, t_board **start, int *counter)
 			if ((board->next = lst_addnew()) == NULL)
 				return (0);
 			board = board->next;
-            (*counter)++;
-            continue;
+			(*counter)++;
+			continue;
 		}
 		j = 0;
 		while (*line)
@@ -112,7 +110,7 @@ int		validate_shape(int fd, t_board **start, int *counter)
 	if (!is_valid(board->shape))
 		return (-1);
 	reform_shape_center(board->shape);
-    board->next = NULL;
+	board->next = NULL;
 	(*counter)++;
 	return (1);
 }
@@ -159,8 +157,8 @@ int		validate_file(int fd, char *argv, t_board **board, int *counter)
 int		main(int argc, char **argv)
 {
 	t_board *head;
-    char     **table;
-    int     counter = 0;
+	char     **table;
+	int     counter = 0;
 	if (argc != 2)
 		ft_putstr_fd("Usage: ./fillit	source_file", STDERR_FILENO);
 	if(validate_file(open_file(argv[1]), argv[1], &head, &counter) == -1)
@@ -169,10 +167,11 @@ int		main(int argc, char **argv)
 		exit(0);
 	}
 	get_points(&head);
-    table = (char **)malloc(sizeof(char *) * counter);
+	table = (char **)malloc(sizeof(char *) * counter);
 	if (table == NULL)
 		exit(0);
-	counter = (int)sqrt(counter * 4);
+	
+	counter = (int)sqrt((counter + 1) * 4);
 	table = initial_table(counter);
 	while (solver(&head, table, &counter,0, 0) == 0)
 	{
@@ -180,5 +179,5 @@ int		main(int argc, char **argv)
 		table = initial_table(counter);
 	}
 	print_solution(table, counter);
-    return (0);
+	return (0);
 }

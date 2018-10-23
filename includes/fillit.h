@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:41:31 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/22 18:06:34 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 15:19:38 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,5 +43,6 @@ void				place_teris(char **table, int i, int j, t_point corr[4], char c);
 int					is_safe(char **table, int i, int j, t_point corr[4], int size);
 char					**initial_table(int size);
 void				print_solution(char **table, int size);
+int					is_valid(int shape[4][4]);
 
 #endif
