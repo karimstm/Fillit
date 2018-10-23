@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/19 11:56:14 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 11:06:48 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 11:23:52 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,6 @@ int     get_points(t_board **board)
    while(tmp)
    {
 
-	   printf("\n\n%c - > \n\n", tmp->c);
        while (i < HEIGHT)
        {
            j = 0; 
@@ -91,7 +90,6 @@ int     get_points(t_board **board)
                 {
                     tmp->corrd[counter].x = j - first; 
                     tmp->corrd[counter].y = i;
-					printf("%d - %d\n", tmp->corrd[counter].x, tmp->corrd[counter].y);
                     counter++;
                 }
                 j++;

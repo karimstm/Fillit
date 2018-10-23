@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 10:55:20 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 11:24:23 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -169,7 +169,6 @@ int		main(int argc, char **argv)
 		exit(0);
 	}
 	get_points(&head);
-	print_shape(head);
     table = (char **)malloc(sizeof(char *) * counter);
 	if (table == NULL)
 		exit(0);

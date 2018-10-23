@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 08:58:46 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 11:13:41 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 11:24:09 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,6 @@ char     **initial_table(int size)
 		while (j < size)
 			table[i][j++] = '.';
 	}
-	print_solution(table, size);
 	return (table);
 }
 
@@ -41,7 +40,7 @@ int		is_safe(char **table, int i, int j, t_point corr[4], int size)
 			return (0);
 		pos++;
 	}
-	if ((table[i + corr[0].y][j + corr[1].x] != '.' ||
+	if ((table[i + corr[0].y][j + corr[0].x] != '.' ||
 				table[i + corr[1].y][j + corr[1].x] != '.'))
 		return (0);
 	if ((table[i + corr[2].y][j + corr[2].x] != '.' ||
