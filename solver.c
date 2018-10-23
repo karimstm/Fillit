@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 08:58:46 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 09:53:59 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 11:13:41 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,6 +28,7 @@ char     **initial_table(int size)
 		while (j < size)
 			table[i][j++] = '.';
 	}
+	print_solution(table, size);
 	return (table);
 }
 
@@ -68,7 +69,6 @@ void	remove_teris(char **table, int i, int j, t_point corr[4])
 	pos = 0;
 	while (pos < 4)
 	{
-	 	printf("+x=%d\t y=%d \t i =%d j=%d \n", corr[pos].x,corr[pos].y, i, j);
 
 		table[i + corr[pos].y][j + corr[pos].x] = '.';		
 		pos++;
@@ -87,7 +87,7 @@ void	print_solution(char **table, int size)
 		j = 0;
 		while (j < size)
 		{
-			printf("%c \t", table[i][j++]); 
+			printf("%c", table[i][j++]); 
 		}
 		i++;
 		printf("\n");
@@ -138,13 +138,19 @@ int     solver(t_board **board, char **table, int *counter, int x, int y)
 		return (0);
 	if (tmp == NULL)
 		return (1);
-	solve_teris(&tmp, table, *counter, &i, &j);
-	if (solver(&tmp->next, table, counter, 0, 0))
-		return (1);
-	else
+	if(solve_teris(&tmp, table, *counter, &i, &j) == 0)
+		return (0);
+	if (solver(&tmp->next, table, counter, 0, 0) == 0)
 	{
 		remove_teris(table, i, j, tmp->corrd);
-		solver(&tmp, table, counter, i, j);
+		if(++j == (*counter))
+		{
+			i++;
+			j = 0;
+		}
+		return(solver(&tmp, table, counter, i, j));
+	}else{
+		return (1);
 	}
 	return (1);
 }
