@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 16:48:31 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/24 11:31:21 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,28 +15,7 @@
 #include <stdio.h>
 #include <math.h>
 
-void 	print_shape(t_board *board)
-{
-	int i;
-	int j;
-
-	while (board != NULL)
-	{
-		i = 0;
-		while (i < 4)
-		{
-			j = 0;
-			while (j < 4)
-				printf("%c\t", (board->shape[i][j++] == 1) ? board->c : '.' );
-			printf("\n");
-			i++;
-		}
-		printf("\n");
-		board = board->next;
-	}	
-}
-
-int		is_valid(int shape[4][4])
+int			is_valid(int shape[4][4])
 {
 	int i;
 	int j;
@@ -62,60 +41,56 @@ int		is_valid(int shape[4][4])
 	return (0);
 }
 
-int		open_file(char *file)
+int			open_file(char *file)
 {
 	int fd;
 
-	if((fd = open(file, O_RDONLY)) <= 2)
+	if ((fd = open(file, O_RDONLY)) <= 2)
 		return (-1);
 	return (fd);
 }
 
-int		validate_shape(int fd, t_board **start, int *counter)
+t_board		*test(t_board *board, int *counter, char c)
+{
+	board->c = c;
+	if (!is_valid(board->shape) || !(board->next = lst_addnew()))
+		return (NULL);
+	reform_shape_center(board->shape);
+	(*counter)++;
+	return (board->next);
+}
+
+int			validate_shape(int fd, t_board **start, int *counter)
 {
 	char		*line;
 	t_board		*board;
-	int 		i;
+	int			i;
 	int			j;
-	char 		c;
+	char		c;
 
-	i = 0;
+	i = -1;
 	c = 'A';
 	if ((board = lst_addnew()) == NULL)
 		return (0);
 	*start = board;
-	while (get_next_line(fd, &line) == 1)
+	while (get_next_line(fd, &line) == 1 && !(j = 0))
 	{
-		if (i == HEIGHT && !(i = 0))
-		{   
-			board->c = c++;
-			if (!is_valid(board->shape))
-				return(-1);
-			reform_shape_center(board->shape);
-			if ((board->next = lst_addnew()) == NULL)
-				return (0);
-			board = board->next;
-			(*counter)++;
+		if (++i == HEIGHT && (i = -1))
+		{
+			if (!(board = test(board, counter, c++)))
+				return (-1);
 			continue;
 		}
-		j = 0;
 		while (*line)
-		{
-			board->shape[i][j++] = (*line == BLOCK) ? 1 : 0;
-			line++;
-		}
-		i++;
+			board->shape[i][j++] = (*line++ == BLOCK) ? 1 : 0;
 	}
-	board->c = c;
-	if (!is_valid(board->shape))
+	if (!test(board, counter, c))
 		return (-1);
-	reform_shape_center(board->shape);
 	board->next = NULL;
-	(*counter)++;
 	return (1);
 }
 
-int		validate_file(int fd, char *argv, t_board **board, int *counter)
+int			validate_file(int fd, char *argv, t_board **board, int *counter)
 {
 	char *line;
 	int	nheight;
@@ -123,15 +98,13 @@ int		validate_file(int fd, char *argv, t_board **board, int *counter)
 
 	nheight = 0;
 	nshape = 0;
-	if(fd <= 2)
+	if (fd <= 2)
 		return (-1);
 	while (get_next_line(fd, &line) == 1)
 	{
 		if (++nheight == HEIGHT + 1)
 		{
-			if (nshape != 4)
-				return (-1);
-			if (ft_strcmp(line, "") != 0)
+			if (nshape != 4 || ft_strcmp(line, "") != 0)
 				return (-1);
 			nheight = 0;
 			nshape = 0;
@@ -143,22 +116,21 @@ int		validate_file(int fd, char *argv, t_board **board, int *counter)
 		{
 			if (*line != BLOCK && *line != EMPTY)
 				return (-1);
-			if (*line == BLOCK)
+			if (*line++ == BLOCK)
 				nshape++;
-			line++;
 		}
 	}
-	if (!validate_shape(open_file(argv), board, counter))
+	if (nshape != 4 || !validate_shape(open_file(argv), board, counter))
 		return (-1);
 	return (1);
 }
 
-
-int		main(int argc, char **argv)
+int			main(int argc, char **argv)
 {
-	t_board *head;
-	char     **table;
-	int     counter = 0;
+	t_board		*head;
+	char		**table;
+	int			counter = 0;
+
 	if (argc != 2)
 		ft_putstr_fd("Usage: ./fillit	source_file", STDERR_FILENO);
 	if(validate_file(open_file(argv[1]), argv[1], &head, &counter) == -1)
@@ -169,8 +141,7 @@ int		main(int argc, char **argv)
 	get_points(&head);
 	table = (char **)malloc(sizeof(char *) * counter);
 	if (table == NULL)
-		exit(0);
-	
+		exit(0);	
 	counter = (int)sqrt((counter + 1) * 4);
 	table = initial_table(counter);
 	while (solver(&head, table, &counter,0, 0) == 0)

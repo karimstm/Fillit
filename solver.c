@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/22 08:58:46 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/23 16:44:50 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/23 17:48:38 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,8 +147,6 @@ int     solver(t_board **board, char **table, int *counter, int x, int y)
 			j = 0;
 		}
 		return(solver(&tmp, table, counter, i, j));
-	}else{
-		return (1);
 	}
 	return (1);
 }
