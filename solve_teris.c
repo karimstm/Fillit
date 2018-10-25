@@ -6,7 +6,7 @@
 /*   By: zdiab- <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/24 18:13:19 by zdiab-            #+#    #+#             */
-/*   Updated: 2018/10/25 08:43:31 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/25 09:57:58 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,11 @@ char	**initial_table(int size)
 	i = -1;
 	while (++i < size)
 	{
-		table[i] = (char *)malloc(sizeof(char) * size);
+		table[i] = (char *)malloc(sizeof(char) * size + 1);
 		j = 0;
 		while (j < size)
 			table[i][j++] = '.';
+		table[i][j] = '\0';
 	}
 	return (table);
 }
