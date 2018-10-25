@@ -6,49 +6,14 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/24 11:31:21 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/25 08:18:45 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include <fcntl.h>
-#include "includes/fillit.h"
+#include "fillit.h"
 #include <stdio.h>
 #include <math.h>
-
-int			is_valid(int shape[4][4])
-{
-	int i;
-	int j;
-	int point;
-
-	i = 0;
-	point = 0;
-	while (i < 4)
-	{
-		j = 0;
-		while (j < 4)
-		{
-			if (i < 3 && (shape[i][j] & 1) & (shape[i + 1][j] & 1))
-				point++;
-			if (j < 3 && (shape[i][j] & 1) & (shape[i][j + 1] & 1))
-				point++;
-			j++;
-		}
-		i++;
-	}
-	if (point >= 3)
-		return (1);
-	return (0);
-}
-
-int			open_file(char *file)
-{
-	int fd;
-
-	if ((fd = open(file, O_RDONLY)) <= 2)
-		return (-1);
-	return (fd);
-}
 
 t_board		*test(t_board *board, int *counter, char c)
 {
@@ -68,8 +33,7 @@ int			validate_shape(int fd, t_board **start, int *counter)
 	int			j;
 	char		c;
 
-	i = -1;
-	c = 'A';
+	initial(&i, &c);
 	if ((board = lst_addnew()) == NULL)
 		return (0);
 	*start = board;
@@ -90,14 +54,25 @@ int			validate_shape(int fd, t_board **start, int *counter)
 	return (1);
 }
 
+int			short_cut(char *line, int *nheight, int *nshape)
+{
+	while (*line && *nheight <= 4)
+	{
+		if (*line != BLOCK && *line != EMPTY)
+			return (-1);
+		if (*line++ == BLOCK)
+			(*nshape)++;
+	}
+	return (1);
+}
+
 int			validate_file(int fd, char *argv, t_board **board, int *counter)
 {
-	char *line;
-	int	nheight;
-	int nshape;
+	char	*line;
+	int		nheight;
+	int		nshape;
 
-	nheight = 0;
-	nshape = 0;
+	to_zero(&nheight, &nshape);
 	if (fd <= 2)
 		return (-1);
 	while (get_next_line(fd, &line) == 1)
@@ -106,19 +81,13 @@ int			validate_file(int fd, char *argv, t_board **board, int *counter)
 		{
 			if (nshape != 4 || ft_strcmp(line, "") != 0)
 				return (-1);
-			nheight = 0;
-			nshape = 0;
+			to_zero(&nheight, &nshape);
 			continue ;
 		}
 		if (ft_strlen(line) != WIDTH)
 			return (-1);
-		while (*line && nheight <= 4)
-		{
-			if (*line != BLOCK && *line != EMPTY)
-				return (-1);
-			if (*line++ == BLOCK)
-				nshape++;
-		}
+		if (short_cut(line, &nheight, &nshape) == -1)
+			return (-1);
 	}
 	if (nshape != 4 || !validate_shape(open_file(argv), board, counter))
 		return (-1);
@@ -129,22 +98,23 @@ int			main(int argc, char **argv)
 {
 	t_board		*head;
 	char		**table;
-	int			counter = 0;
+	int			counter;
 
+	counter = 0;
 	if (argc != 2)
 		ft_putstr_fd("Usage: ./fillit	source_file", STDERR_FILENO);
-	if(validate_file(open_file(argv[1]), argv[1], &head, &counter) == -1)
+	if (validate_file(open_file(argv[1]), argv[1], &head, &counter) == -1)
 	{
 		ft_putstr_fd("error\n", STDERR_FILENO);
 		exit(0);
 	}
-	get_points(&head);
+	get_points(&head, 0, 0, 0);
 	table = (char **)malloc(sizeof(char *) * counter);
 	if (table == NULL)
-		exit(0);	
+		exit(0);
 	counter = (int)sqrt((counter + 1) * 4);
 	table = initial_table(counter);
-	while (solver(&head, table, &counter,0, 0) == 0)
+	while (solver(&head, table, &counter, init(0, 0)) == 0)
 	{
 		counter++;
 		table = initial_table(counter);
