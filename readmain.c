@@ -6,7 +6,7 @@
 /*   By: zdiab- <marvin@42.fr>                      +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/24 18:21:36 by zdiab-            #+#    #+#             */
-/*   Updated: 2018/10/25 09:06:56 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/25 11:06:25 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int			open_file(char *file)
 {
 	int fd;
 
-	if ((fd = open(file, O_RDONLY)) <= 2)
+	if ((fd = open(file, O_RDONLY)) == -1)
 		return (-1);
 	return (fd);
 }

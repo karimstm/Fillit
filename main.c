@@ -6,7 +6,7 @@
 /*   By: amoutik <abdelkarimoutik@gmail.com>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2018/10/16 08:27:09 by amoutik           #+#    #+#             */
-/*   Updated: 2018/10/25 10:30:16 by amoutik          ###   ########.fr       */
+/*   Updated: 2018/10/25 11:00:17 by amoutik          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,12 +103,12 @@ int			main(int argc, char **argv)
 	counter = 0;
 	if (argc != 2)
 	{
-		ft_putstr("Usage: ./fillit	source_file\n");
+		ft_putendl("Usage: ./fillit	source_file");
 		return (0);
 	}
 	if (validate_file(open_file(argv[1]), argv[1], &head, &counter) == -1)
 	{
-		ft_putstr("error\n");
+		ft_putendl("error");
 		return (0);
 	}
 	get_points(&head, 0, 0, 0);
